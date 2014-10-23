@@ -8,16 +8,23 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');<% if (filters.mongoose) { %>
-var mongoose = require('mongoose-bird')();<% } %>
+var mongoose = require('mongoose-bird')();<% } %><% if (filters.sequelize) { %>
+var sqldb = require('./sqldb');<% } %>
 var config = require('./config/environment');
 <% if (filters.mongoose) { %>
-// Connect to database
+// Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
 
-// Populate DB with sample data
+// Populate MongoDB with sample data
 if (config.seedDB) { require('./config/seed'); }
+<% } %><% if (filters.sequelize) { %>
+// Connect to SQL database
+sqldb.connect(config.sqldb.uri, config.sqldb.options);
 
-<% } %>// Setup server
+// Populate SQL with sample data
+if (config.seedDB) { require('./config/seed'); }
+<% } %>
+// Setup server
 var app = express();
 var server = require('http').createServer(app);<% if (filters.socketio) { %>
 var socketio = require('socket.io')(server, {
