@@ -3,15 +3,20 @@
  */
 
 'use strict';
-
-var thing = require('./thing.model');
+<% if (filters.mongooseModels) { %>
+var thing = require('./thing.model');<% } %><% if (filters.sequelizeModels) { %>
+var thing = require('../../sqldb').Thing;<% } %>
 
 exports.register = function(socket) {
-  thing.schema.post('save', function(doc) {
-    onSave(socket, doc);
+  <% if (filters.mongooseModels) { %>thing.schema.post('save', function(doc) {<% }
+     if (filters.sequelizeModels) { %>thing.hook('afterUpdate', function(doc, fn) {<% } %>
+    onSave(socket, doc);<% if (filters.sequelizeModels) { %>
+    fn(null);<% } %>
   });
-  thing.schema.post('remove', function(doc) {
-    onRemove(socket, doc);
+  <% if (filters.mongooseModels) { %>thing.schema.post('remove', function(doc) {<% }
+     if (filters.sequelizeModels) { %>thing.hook('afterDestroy', function(doc, fn) {<% } %>
+    onRemove(socket, doc);<% if (filters.sequelizeModels) { %>
+    fn(null);<% } %>
   });
 };
 

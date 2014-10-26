@@ -221,10 +221,13 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
         } else {
           models = answers.models;
         }
+        this.filters.models = true;
         this.filters[models + 'Models'] = true;
         answers.odms.forEach(function(odm) {
           this.filters[odm] = true;
         }.bind(this));
+      } else {
+        this.filters.noModels = true;
       }
       if(answers.oauth) {
         if(answers.oauth.length) this.filters.oauth = true;

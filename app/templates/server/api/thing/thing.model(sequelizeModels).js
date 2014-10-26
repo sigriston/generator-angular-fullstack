@@ -1,12 +1,15 @@
 'use strict';
 
-var mongoose = require('mongoose-bird')();
-var Schema = mongoose.Schema;
-
-var ThingSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
-});
-
-module.exports = mongoose.model('Thing', ThingSchema);
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('Thing', {
+    _id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: DataTypes.STRING,
+    info: DataTypes.STRING,
+    active: DataTypes.BOOLEAN
+  });
+};
