@@ -18,7 +18,9 @@ describe('angular-fullstack generator', function () {
     chai: 'expect',
     bootstrap: true,
     uibootstrap: true,
+    odms: [ 'mongoose' ],
     mongoose: true,
+    mongooseModels: true,
     auth: true,
     oauth: [],
     socketio: true
@@ -224,11 +226,18 @@ describe('angular-fullstack generator', function () {
       ]);
     }
 
-    /* Mongoose */
-    if (ops.mongoose) {
+    /* Models - Mongoose or Sequelize */
+    if (ops.mongoose || ops.sequelize) {
       files = files.concat([
         'server/api/thing/thing.model.js',
         'server/config/seed.js'
+      ]);
+    }
+
+    /* Sequelize */
+    if (ops.sequelize) {
+      files = files.concat([
+        'server/sqldb/index.js'
       ]);
     }
 
@@ -249,7 +258,6 @@ describe('angular-fullstack generator', function () {
         'client/app/admin/admin.controller.' + script,
         'client/components/auth/auth.service.' + script,
         'client/components/auth/user.service.' + script,
-        'client/components/mongoose-error/mongoose-error.directive.' + script,
         'server/api/user/index.js',
         'server/api/user/index.spec.js',
         'server/api/user/user.controller.js',
@@ -266,6 +274,18 @@ describe('angular-fullstack generator', function () {
         'e2e/account/signup/signup.po.js',
         'e2e/account/signup/signup.spec.js'
       ]);
+
+      if (ops.mongooseModels) {
+        files.push(
+          'client/components/mongoose-error/mongoose-error.directive.' + script
+        );
+      }
+
+      if (ops.sequelizeModels) {
+        files.push(
+          'client/components/sequelize-error/sequelize-error.directive.' + script
+        );
+      }
     }
 
     /* OAuth (see oauthFiles function above) */
@@ -475,7 +495,83 @@ describe('angular-fullstack generator', function () {
         stylesheet: 'less',
         router: 'uirouter',
         testing: 'jasmine',
+        odms: [ 'mongoose' ],
         mongoose: true,
+        mongooseModels: true,
+        auth: true,
+        oauth: ['twitterAuth', 'facebookAuth', 'googleAuth'],
+        socketio: true,
+        bootstrap: true,
+        uibootstrap: true
+      };
+
+      beforeEach(function() {
+        helpers.mockPrompt(gen, testOptions);
+      });
+
+      it('should run client tests successfully', function(done) {
+        runTest('grunt test:client', this, done);
+      });
+
+      it('should pass jscs', function(done) {
+        runTest('grunt jscs', this, done);
+      });
+
+      it('should pass lint', function(done) {
+        runTest('grunt jshint', this, done);
+      });
+
+      it('should run server tests successfully', function(done) {
+        runTest('grunt test:server', this, done);
+      });
+
+      it('should pass jscs with generated endpoint', function(done) {
+        runTest('grunt jscs', this, done, 'foo');
+      });
+
+      it('should pass lint with generated snake-case endpoint', function(done) {
+        runTest('grunt jshint', this, done, 'foo-bar');
+      });
+
+      it('should run server tests successfully with generated snake-case endpoint', function(done) {
+        runTest('grunt test:server', this, done, 'foo-bar');
+      });
+
+      it('should generate expected files', function (done) {
+        gen.run({}, function () {
+          helpers.assertFile(genFiles(testOptions));
+          done();
+        });
+      });
+
+      it('should not generate unexpected files', function (done) {
+        gen.run({}, function () {
+          assertOnlyFiles(genFiles(testOptions), done);
+        });
+      });
+
+      if(!process.env.SKIP_E2E) {
+        it('should run e2e tests successfully', function (done) {
+          runTest('grunt test:e2e', this, done, 240000);
+        });
+
+        //it('should run e2e tests successfully for production app', function (done) {
+        //  runTest('grunt test:e2e:prod', this, done, 240000);
+        //});
+      }
+
+    });
+
+    describe('with sequelize models, auth', function() {
+      var testOptions = {
+        script: 'js',
+        markup: 'jade',
+        stylesheet: 'stylus',
+        router: 'uirouter',
+        testing: 'jasmine',
+        odms: [ 'sequelize' ],
+        sequelize: true,
+        sequelizeModels: true,
         auth: true,
         oauth: ['twitterAuth', 'facebookAuth', 'googleAuth'],
         socketio: true,
@@ -548,6 +644,7 @@ describe('angular-fullstack generator', function () {
         router: 'ngroute',
         testing: 'mocha',
         chai: 'should',
+        odms: [],
         mongoose: false,
         auth: false,
         oauth: [],
@@ -621,6 +718,7 @@ describe('angular-fullstack generator', function () {
         stylesheet: 'css',
         router: 'ngroute',
         testing: 'jasmine',
+        odms: [],
         mongoose: false,
         auth: false,
         oauth: [],

@@ -215,11 +215,13 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
       if(answers.socketio) this.filters.socketio = true;
       if(answers.auth) this.filters.auth = true;
       if(answers.odms) {
+        var models;
         if(!answers.models) {
-          this.filters.models = answers.odms[0];
+          models = answers.odms[0];
         } else {
-          this.filters.models = answers.models;
+          models = answers.models;
         }
+        this.filters[models + 'Models'] = true;
         answers.odms.forEach(function(odm) {
           this.filters[odm] = true;
         }.bind(this));

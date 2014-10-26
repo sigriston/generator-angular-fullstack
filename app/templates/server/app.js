@@ -14,14 +14,8 @@ var config = require('./config/environment');
 <% if (filters.mongoose) { %>
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
-
-// Populate MongoDB with sample data
-if (config.seedDB) { require('./config/seed'); }
-<% } %><% if (filters.sequelize) { %>
-// Connect to SQL database
-sqldb.connect(config.sqldb.uri, config.sqldb.options);
-
-// Populate SQL with sample data
+<% } %><% if (filters.mongooseModels || filters.sequelizeModels) { %>
+// Populate databases with sample data
 if (config.seedDB) { require('./config/seed'); }
 <% } %>
 // Setup server
