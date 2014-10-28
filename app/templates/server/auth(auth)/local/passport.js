@@ -6,30 +6,31 @@ exports.setup = function(User, config) {
     usernameField: 'email',
     passwordField: 'password' // this is the virtual field on the model
   }, function(email, password, done) {
-    User.findOne({
+    <% if (filters.mongooseModels) { %>User.findOneAsync({<% }
+       if (filters.sequelizeModels) { %>User.find({<% } %>
       email: email.toLowerCase()
-    }, function(err, user) {
-      if (err) {
-        return done(err);
-      }
-
-      if (!user) {
-        return done(null, false, {
-          message: 'This email is not registered.'
-        });
-      }
-      user.authenticate(password, function(authError, authenticated) {
-        if (authError) {
-          return done(authError);
-        }
-        if (!authenticated) {
+    })
+      .then(function(user) {
+        if (!user) {
           return done(null, false, {
-            message: 'This password is not correct.'
+            message: 'This email is not registered.'
           });
-        } else {
-          return done(null, user);
         }
+        user.authenticate(password, function(authError, authenticated) {
+          if (authError) {
+            return done(authError);
+          }
+          if (!authenticated) {
+            return done(null, false, {
+              message: 'This password is not correct.'
+            });
+          } else {
+            return done(null, user);
+          }
+        });
+      })
+      .catch(function(err) {
+        return done(err);
       });
-    });
   }));
 };

@@ -11,7 +11,8 @@
 
 var _ = require('lodash');<% if (filters.mongooseModels) { %>
 var Thing = require('./thing.model');<% } %><% if (filters.sequelizeModels) { %>
-var Thing = require('../../sqldb').Thing;<% } %>
+var sqldb = require('../../sqldb')
+var Thing = sqldb.Thing;<% } %>
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -61,7 +62,16 @@ function removeEntity(res) {
     }
   };
 }
-
+<% if (filters.sequelizeModels) { %>
+function wrapSync(fn) {
+  return function() {
+    var args = arguments;
+    sqldb.sync.then(function() {
+      fn.apply(this, args);
+    });
+  };
+}
+<% } %>
 // Get list of things
 exports.index = function(req, res) {
   <% if (filters.mongooseModels) { %>Thing.findAsync()<% }
@@ -107,4 +117,6 @@ exports.destroy = function(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
-};
+};<% if (filters.sequelizeModels) { %>
+// Wrap all controller functions so they wait on DB sync.
+module.exports = _.mapValues(module.exports, wrapSync);<% } %>

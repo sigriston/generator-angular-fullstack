@@ -64,7 +64,7 @@ describe('User API:', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
-          res.body._id.should.equal(user._id.toString());
+          res.body._id.toString().should.equal(user._id.toString());
           done();
         });
     });

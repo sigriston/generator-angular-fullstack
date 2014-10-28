@@ -1,7 +1,9 @@
 'use strict';
 <% if (filters.mongooseModels) { %>
 var User = require('./user.model');<% } %><% if (filters.sequelizeModels) { %>
-var User = require('../../sqldb').User;<% } %>
+var _ = require('lodash');
+var sqldb = require('../../sqldb');
+var User = sqldb.User;<% } %>
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -26,7 +28,16 @@ function respondWith(res, statusCode) {
     res.send(statusCode);
   };
 }
-
+<% if (filters.sequelizeModels) { %>
+function wrapSync(fn) {
+  return function() {
+    var args = arguments;
+    sqldb.sync.then(function() {
+      fn.apply(this, args);
+    });
+  };
+}
+<% } %>
 /**
  * Get list of users
  * restriction: 'admin'
@@ -152,4 +163,6 @@ exports.me = function(req, res, next) {
  */
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
-};
+};<% if (filters.sequelizeModels) { %>
+// Wrap all controller functions so they wait on DB sync.
+module.exports = _.mapValues(module.exports, wrapSync);<% } %>
