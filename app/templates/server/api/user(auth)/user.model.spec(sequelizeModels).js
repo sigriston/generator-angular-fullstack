@@ -14,8 +14,10 @@ var user = User.build(userTemplate);
 
 describe('User Model', function() {
   before(function() {
-    // Clear users before testing
-    return User.destroy();
+    // Sync and clear users before testing
+    User.sync().then(function() {
+      return User.destroy();
+    });
   });
 
   afterEach(function() {
