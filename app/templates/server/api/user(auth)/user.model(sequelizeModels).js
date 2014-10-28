@@ -70,7 +70,7 @@ module.exports = function(sequelize, DataTypes) {
     hooks: {
       beforeCreate: function(user, fn) {
         user.updatePassword(fn);
-      }
+      },
       beforeUpdate: function(user, fn) {
         if (user.changed('password')) {
           user.updatePassword(fn);
