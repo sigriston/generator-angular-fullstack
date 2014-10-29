@@ -227,7 +227,7 @@ describe('angular-fullstack generator', function () {
     }
 
     /* Models - Mongoose or Sequelize */
-    if (ops.mongoose || ops.sequelize) {
+    if (ops.models) {
       files = files.concat([
         'server/api/thing/thing.model.js',
         'server/config/seed.js'

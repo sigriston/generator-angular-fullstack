@@ -45,14 +45,14 @@ function wrapSync(fn) {
 exports.index = function(req, res) {
   <% if (filters.mongooseModels) { %>User.findAsync({}, '-salt -hashedPassword')<% }
      if (filters.sequelizeModels) { %>User.findAll({
-       attributes: [
-         '_id',
-         'name',
-         'email',
-         'role',
-         'provider'
-       ]
-     })<% } %>
+    attributes: [
+      '_id',
+      'name',
+      'email',
+      'role',
+      'provider'
+    ]
+  })<% } %>
     .then(function(users) {
       res.json(200, users);
     })
@@ -87,7 +87,11 @@ exports.show = function(req, res, next) {
   var userId = req.params.id;
 
   <% if (filters.mongooseModels) { %>User.findByIdAsync(userId)<% }
-     if (filters.sequelizeModels) { %>User.find({ where: { _id: userId } })<% } %>
+     if (filters.sequelizeModels) { %>User.find({
+    where: {
+      _id: userId
+    }
+  })<% } %>
     .then(function(user) {
       if (!user) {
         return res.send(401);
@@ -119,7 +123,11 @@ exports.changePassword = function(req, res, next) {
   var newPass = String(req.body.newPassword);
 
   <% if (filters.mongooseModels) { %>User.findByIdAsync(userId)<% }
-     if (filters.sequelizeModels) { %>User.find({ where: { _id: userId } })<% } %>
+     if (filters.sequelizeModels) { %>User.find({
+    where: {
+      _id: userId
+    }
+  })<% } %>
     .then(function(user) {
       if (user.authenticate(oldPass)) {
         user.password = newPass;

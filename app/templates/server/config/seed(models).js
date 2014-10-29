@@ -73,5 +73,4 @@ var Thing = sqldb.Thing;
     .then(function() {
       console.log('finished populating users');
     });
-  });
-<% } %>
+  });<% } %>

@@ -83,7 +83,11 @@ exports.index = function(req, res) {
 // Get a single thing
 exports.show = function(req, res) {
   <% if (filters.mongooseModels) { %>Thing.findByIdAsync(req.params.id)<% }
-     if (filters.sequelizeModels) { %>Thing.find({ where: { _id: req.params.id } })<% } %>
+     if (filters.sequelizeModels) { %>Thing.find({
+    where: {
+      _id: req.params.id
+    }
+  })<% } %>
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -103,7 +107,11 @@ exports.update = function(req, res) {
     delete req.body._id;
   }
   <% if (filters.mongooseModels) { %>Thing.findByIdAsync(req.params.id)<% }
-     if (filters.sequelizeModels) { %>Thing.find({ where: { _id: req.params.id } })<% } %>
+     if (filters.sequelizeModels) { %>Thing.find({
+    where: {
+      _id: req.params.id
+    }
+  })<% } %>
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
@@ -113,7 +121,11 @@ exports.update = function(req, res) {
 // Deletes a thing from the DB.
 exports.destroy = function(req, res) {
   <% if (filters.mongooseModels) { %>Thing.findByIdAsync(req.params.id)<% }
-     if (filters.sequelizeModels) { %>Thing.find({ where: { _id: req.params.id } })<% } %>
+     if (filters.sequelizeModels) { %>Thing.find({
+    where: {
+      _id: req.params.id
+    }
+  })<% } %>
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));

@@ -184,18 +184,19 @@ module.exports = function(sequelize, DataTypes) {
                        .toString('base64');
         }
 
-        return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, function(err, key) {
-          if (err) {
-            callback(err);
-          }
-          return callback(null, key.toString('base64'));
-        });
+        return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength,
+          function(err, key) {
+            if (err) {
+              callback(err);
+            }
+            return callback(null, key.toString('base64'));
+          });
       },
 
       /**
        * Update password field
        *
-       * @param {String} password
+       * @param {Function} fn
        * @return {String}
        * @api public
        */

@@ -29,7 +29,11 @@ function isAuthenticated() {
     // Attach user to request
     .use(function(req, res, next) {
       <% if (filters.mongooseModels) { %>User.findByIdAsync(req.user._id)<% }
-         if (filters.sequelizeModels) { %>User.find({ where: { _id: req.user._id } })<% } %>
+         if (filters.sequelizeModels) { %>User.find({
+        where: {
+          _id: req.user._id
+        }
+      })<% } %>
         .then(function(user) {
           if (!user) {
             return res.send(401);

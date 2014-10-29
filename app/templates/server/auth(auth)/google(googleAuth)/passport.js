@@ -25,7 +25,7 @@ exports.setup = function(User, config) {
           });
           <% if (filters.mongooseModels) { %>user.saveAsync()<% }
              if (filters.sequelizeModels) { %>user.save()<% } %>
-            .then(function(user){
+            .then(function(user) {
               return done(null, user);
             })
             .catch(function(err) {
