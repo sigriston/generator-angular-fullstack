@@ -7,7 +7,11 @@
 var thing = require('./thing.model');<% } %><% if (filters.sequelizeModels) { %>
 var thing = require('../../sqldb').Thing;<% } %>
 
-exports.register = function(socket) {
+exports.register = function(socket) {<% if (filters.sequelizeModels) { %>
+  thing.hook('afterCreate', function(doc, fn) {
+    onSave(socket, doc);
+    fn(null);
+  });<% } %>
   <% if (filters.mongooseModels) { %>thing.schema.post('save', function(doc) {<% }
      if (filters.sequelizeModels) { %>thing.hook('afterUpdate', function(doc, fn) {<% } %>
     onSave(socket, doc);<% if (filters.sequelizeModels) { %>

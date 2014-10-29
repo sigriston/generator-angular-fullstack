@@ -68,6 +68,20 @@ module.exports = function(sequelize, DataTypes) {
      * Pre-save hooks
      */
     hooks: {
+      beforeBulkCreate: function(users, fields, fn) {
+        var totalUpdated = 0;
+        users.forEach(function(user) {
+          user.updatePassword(function(err) {
+            if (err) {
+              return fn(err);
+            }
+            totalUpdated += 1;
+            if (totalUpdated === users.length) {
+              return fn();
+            }
+          });
+        });
+      },
       beforeCreate: function(user, fn) {
         user.updatePassword(fn);
       },
@@ -155,7 +169,10 @@ module.exports = function(sequelize, DataTypes) {
        */
       encryptPassword: function(password, callback) {
         if (!password || !this.salt) {
-          return null;
+          if (!callback) {
+            return null;
+          }
+          return callback(null);
         }
 
         var defaultIterations = 10000;
@@ -207,48 +224,6 @@ module.exports = function(sequelize, DataTypes) {
         } else {
           fn(null);
         }
-      }
-    },
-
-    /**
-     * Class Methods (Statics)
-     */
-    classMethods: {
-      login: function(email, password, done) {
-        this.find({
-          where: {
-            email: email.toLowerCase()
-          }
-        }).then(function(user) {
-          if (!user) {
-            return done(null, false, {
-              message: 'This email is not registered.'
-            });
-          }
-          if (!user.authenticate(password)) {
-            return done(null, false, {
-              message: 'This password is not correct.'
-            });
-          }
-          return done(null, user);
-        }, function(err) {
-          return done(err);
-        });
-      },
-
-      attachUserToRequest: function(req, res, next) {
-        this.find({
-          where: {
-            _id: req.user._id
-          }
-        }).then(function(user) {
-          if (!user) return res.send(401);
-
-          req.user = user;
-          next();
-        }, function(err) {
-          return next(err);
-        });
       }
     }
   });

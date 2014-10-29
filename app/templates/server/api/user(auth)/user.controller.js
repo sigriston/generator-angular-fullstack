@@ -105,7 +105,7 @@ exports.show = function(req, res, next) {
  */
 exports.destroy = function(req, res) {
   <% if (filters.mongooseModels) { %>User.findByIdAndRemoveAsync(req.params.id)<% }
-     if (filters.sequelizeModels) { %>User.destroy({ where: { _id: req.params.id } })<% } %>
+     if (filters.sequelizeModels) { %>User.destroy({ _id: req.params.id })<% } %>
     .then(respondWith(res, 204))
     .catch(handleError(res));
 };
@@ -141,14 +141,17 @@ exports.me = function(req, res, next) {
 
   <% if (filters.mongooseModels) { %>User.findOneAsync({ _id: userId }, '-salt -hashedPassword')<% }
      if (filters.sequelizeModels) { %>User.find({
-       attributes: [
-         '_id',
-         'name',
-         'email',
-         'role',
-         'provider'
-       ]
-     })<% } %>
+    where: {
+      _id: userId
+    },
+    attributes: [
+      '_id',
+      'name',
+      'email',
+      'role',
+      'provider'
+    ]
+  })<% } %>
     .then(function(user) { // don't ever give out the password or salt
       if (!user) { return res.json(401); }
       res.json(user);
@@ -157,12 +160,13 @@ exports.me = function(req, res, next) {
       return next(err);
     });
 };
-
+<% if (filters.sequelizeModels) { %>
+// Wrap all controller functions so they wait on DB sync.
+module.exports = _.mapValues(module.exports, wrapSync);
+<% } %>
 /**
  * Authentication callback
  */
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
-};<% if (filters.sequelizeModels) { %>
-// Wrap all controller functions so they wait on DB sync.
-module.exports = _.mapValues(module.exports, wrapSync);<% } %>
+};
