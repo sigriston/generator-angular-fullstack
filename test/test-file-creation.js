@@ -19,8 +19,8 @@ describe('angular-fullstack generator', function () {
     bootstrap: true,
     uibootstrap: true,
     odms: [ 'mongoose' ],
-    mongoose: true,
-    mongooseModels: true,
+    //mongoose: true,
+    //mongooseModels: true,
     auth: true,
     oauth: [],
     socketio: true
@@ -155,7 +155,8 @@ describe('angular-fullstack generator', function () {
 
     var script = mapping.script[ops.script],
         markup = mapping.markup[ops.markup],
-        stylesheet = mapping.stylesheet[ops.stylesheet];
+        stylesheet = mapping.stylesheet[ops.stylesheet],
+        models = ops.models ? ops.models : ops.odms[0];
 
     /* Core Files */
     files = files.concat([
@@ -227,7 +228,7 @@ describe('angular-fullstack generator', function () {
     }
 
     /* Models - Mongoose or Sequelize */
-    if (ops.models) {
+    if (models) {
       files = files.concat([
         'server/api/thing/thing.model.js',
         'server/config/seed.js'
@@ -235,7 +236,7 @@ describe('angular-fullstack generator', function () {
     }
 
     /* Sequelize */
-    if (ops.sequelize) {
+    if (ops.odms.indexOf('sequelize') !== -1) {
       files = files.concat([
         'server/sqldb/index.js'
       ]);
@@ -275,13 +276,13 @@ describe('angular-fullstack generator', function () {
         'e2e/account/signup/signup.spec.js'
       ]);
 
-      if (ops.mongooseModels) {
+      if (models === 'mongoose') {
         files.push(
           'client/components/mongoose-error/mongoose-error.directive.' + script
         );
       }
 
-      if (ops.sequelizeModels) {
+      if (models === 'sequelize') {
         files.push(
           'client/components/sequelize-error/sequelize-error.directive.' + script
         );
@@ -378,7 +379,7 @@ describe('angular-fullstack generator', function () {
       fs.symlinkSync(__dirname +'/fixtures/bower_components', __dirname +'/temp/client/bower_components');
     });
 
-    describe('with default options', function() {
+    describe.only('with default options', function() {
       beforeEach(function() {
         helpers.mockPrompt(gen, defaultOptions);
       });
