@@ -19,8 +19,6 @@ describe('angular-fullstack generator', function () {
     bootstrap: true,
     uibootstrap: true,
     odms: [ 'mongoose' ],
-    //mongoose: true,
-    //mongooseModels: true,
     auth: true,
     oauth: [],
     socketio: true
@@ -379,7 +377,7 @@ describe('angular-fullstack generator', function () {
       fs.symlinkSync(__dirname +'/fixtures/bower_components', __dirname +'/temp/client/bower_components');
     });
 
-    describe.only('with default options', function() {
+    describe('with default options', function() {
       beforeEach(function() {
         helpers.mockPrompt(gen, defaultOptions);
       });
@@ -497,8 +495,6 @@ describe('angular-fullstack generator', function () {
         router: 'uirouter',
         testing: 'jasmine',
         odms: [ 'mongoose' ],
-        mongoose: true,
-        mongooseModels: true,
         auth: true,
         oauth: ['twitterAuth', 'facebookAuth', 'googleAuth'],
         socketio: true,
@@ -563,7 +559,7 @@ describe('angular-fullstack generator', function () {
 
     });
 
-    describe('with sequelize models, auth', function() {
+    describe.only('with sequelize models, auth', function() {
       var testOptions = {
         script: 'js',
         markup: 'jade',
@@ -571,8 +567,6 @@ describe('angular-fullstack generator', function () {
         router: 'uirouter',
         testing: 'jasmine',
         odms: [ 'sequelize' ],
-        sequelize: true,
-        sequelizeModels: true,
         auth: true,
         oauth: ['twitterAuth', 'facebookAuth', 'googleAuth'],
         socketio: true,
@@ -646,7 +640,6 @@ describe('angular-fullstack generator', function () {
         testing: 'mocha',
         chai: 'should',
         odms: [],
-        mongoose: false,
         auth: false,
         oauth: [],
         socketio: false,
@@ -720,7 +713,6 @@ describe('angular-fullstack generator', function () {
         router: 'ngroute',
         testing: 'jasmine',
         odms: [],
-        mongoose: false,
         auth: false,
         oauth: [],
         socketio: false,

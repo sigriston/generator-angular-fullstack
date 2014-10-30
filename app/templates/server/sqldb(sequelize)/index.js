@@ -7,7 +7,9 @@
 var path = require('path');
 var config = require('../config/environment');
 
-var Sequelize = require('sequelize');
+var Sequelize = require('sequelize');<% if (filters.twitterAuth) { %>
+var session = require('express-session');
+var SequelizeStore = require('connect-session-sequelize')(session.Store);<% } %>
 
 var db = {
   Sequelize: Sequelize,
@@ -29,7 +31,9 @@ db.User = db.sequelize.import(path.join(
   'user',
   'user.model'
 ));
-<% } %><% } %>
+<% if (filters.twitterAuth) { %>
+db.sequelizeStore = new SequelizeStore({ db: db.sequelize });
+<% } %><% } %><% } %>
 // DB Sync promise
 db.sync = db.sequelize.sync().then();
 

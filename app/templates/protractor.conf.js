@@ -75,10 +75,13 @@ var config = {
     );
 <% } %>
     var serverConfig = config.params.serverConfig;
-
+<% if (filters.mongooseModels) { %>
     // Setup mongo for tests
     var mongoose = require('mongoose-bird')();
-    mongoose.connect(serverConfig.mongo.uri, serverConfig.mongo.options); // Connect to database
+    mongoose.connect(serverConfig.mongo.uri, serverConfig.mongo.options); // Connect to database<% } %><% if (filters.sequelizeModels) { %>
+    // Setup sequelize for tests
+    var sqldb = require(serverConfig.root + '/server/sqldb');
+    return sqldb.sync;<% } %>
   }
 };
 
