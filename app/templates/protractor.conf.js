@@ -75,7 +75,7 @@ var config = {
     );
 <% } %>
     var serverConfig = config.params.serverConfig;
-<% if (filters.mongooseModels) { %>
+<% if (filters.mongoose) { %>
     // Setup mongo for tests
     var mongoose = require('mongoose-bird')();
     mongoose.connect(serverConfig.mongo.uri, serverConfig.mongo.options); // Connect to database<% } %>

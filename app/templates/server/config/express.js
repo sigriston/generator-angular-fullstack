@@ -15,7 +15,7 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');<% if (filters.auth) { %>
 var passport = require('passport');<% } %><% if (filters.twitterAuth) { %>
-var session = require('express-session');<% if (filters.mongooseModels) { %>
+var session = require('express-session');<% if (filters.mongoose) { %>
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose-bird')();<% } %><% } %>
 
@@ -38,7 +38,7 @@ module.exports = function(app) {
   app.use(session({
     secret: config.secrets.session,
     resave: true,
-    saveUninitialized: true<% if (filters.mongooseModels) { %>,
+    saveUninitialized: true<% if (filters.mongoose) { %>,
     store: new mongoStore({ mongoose_connection: mongoose.connection })<% } %>
   }));
 <% } %>
