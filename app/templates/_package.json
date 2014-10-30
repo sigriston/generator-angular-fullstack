@@ -26,9 +26,8 @@
     "passport-facebook": "latest",<% } %><% if (filters.twitterAuth) { %>
     "passport-twitter": "latest",<% } %><% if (filters.googleAuth) { %>
     "passport-google-oauth": "latest",<% } %>
-    "composable-middleware": "^0.3.0",<% if (filters.mongooseModels) { %>
-    "connect-mongo": "^0.4.1",<% } %><% if (filters.sequelizeModels) { %>
-    "connect-session-sequelize": "~1.0"<% } %><% if (filters.socketio) { %>,
+    "composable-middleware": "^0.3.0"<% if (filters.mongooseModels) { %>,
+    "connect-mongo": "^0.4.1"<% } %><% if (filters.socketio) { %>,
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
     "socketio-jwt": "^2.0.2"<% } %>
