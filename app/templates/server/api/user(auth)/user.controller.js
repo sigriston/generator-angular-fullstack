@@ -28,16 +28,7 @@ function respondWith(res, statusCode) {
     res.send(statusCode);
   };
 }
-<% if (filters.sequelizeModels) { %>
-function wrapSync(fn) {
-  return function() {
-    var args = arguments;
-    sqldb.sync.then(function() {
-      fn.apply(this, args);
-    });
-  };
-}
-<% } %>
+
 /**
  * Get list of users
  * restriction: 'admin'
@@ -168,10 +159,7 @@ exports.me = function(req, res, next) {
       return next(err);
     });
 };
-<% if (filters.sequelizeModels) { %>
-// Wrap all controller functions so they wait on DB sync.
-module.exports = _.mapValues(module.exports, wrapSync);
-<% } %>
+
 /**
  * Authentication callback
  */

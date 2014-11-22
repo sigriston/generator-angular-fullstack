@@ -30,9 +30,19 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
-server.listen(config.port, config.ip, function() {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
-});
-
+function startServer() {
+  server.listen(config.port, config.ip, function() {
+    console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+  });
+}
+<% if (filters.sequelize) { %>
+sqldb.sequelize.sync()
+  .then(startServer)
+  .catch(function(err) {
+    console.log('Server failed to start due to error: %s', err);
+  });
+<% } else { %>
+setImmediate(startServer);
+<% } %>
 // Expose app
 exports = module.exports = app;

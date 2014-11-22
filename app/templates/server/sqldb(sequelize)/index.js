@@ -30,7 +30,4 @@ db.User = db.sequelize.import(path.join(
   'user.model'
 ));
 <% } %><% } %>
-// DB Sync promise
-db.sync = db.sequelize.sync().then();
-
 module.exports = db;
