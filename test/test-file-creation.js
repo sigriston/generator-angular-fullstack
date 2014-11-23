@@ -257,6 +257,7 @@ describe('angular-fullstack generator', function () {
         'client/app/admin/admin.controller.' + script,
         'client/components/auth/auth.service.' + script,
         'client/components/auth/user.service.' + script,
+        'client/components/mongoose-error/mongoose-error.directive.' + script,
         'server/api/user/index.js',
         'server/api/user/index.spec.js',
         'server/api/user/user.controller.js',
@@ -273,18 +274,6 @@ describe('angular-fullstack generator', function () {
         'e2e/account/signup/signup.po.js',
         'e2e/account/signup/signup.spec.js'
       ]);
-
-      if (models === 'mongoose') {
-        files.push(
-          'client/components/mongoose-error/mongoose-error.directive.' + script
-        );
-      }
-
-      if (models === 'sequelize') {
-        files.push(
-          'client/components/sequelize-error/sequelize-error.directive.' + script
-        );
-      }
     }
 
     /* OAuth (see oauthFiles function above) */
