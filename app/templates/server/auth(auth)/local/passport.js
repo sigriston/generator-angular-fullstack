@@ -38,12 +38,7 @@ exports.setup = function(User, config) {
   passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password' // this is the virtual field on the model
-  }, function(email, password, done) {<% if (filters.mongooseModels) { %>
+  }, function(email, password, done) {<% if (filters.models) { %>
     return localAuthenticate(User, email, password, done);
-<% } %><% if (filters.sequelizeModels) { %>
-    User.sync()
-      .then(function() {
-        return localAuthenticate(User, email, password, done);
-      });
 <% } %>  }));
 };
