@@ -548,7 +548,7 @@ describe('angular-fullstack generator', function () {
 
     });
 
-    describe.only('with sequelize models, auth', function() {
+    describe('with sequelize models, auth', function() {
       var testOptions = {
         script: 'js',
         markup: 'jade',
