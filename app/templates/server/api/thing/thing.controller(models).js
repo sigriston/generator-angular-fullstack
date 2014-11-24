@@ -43,9 +43,10 @@ function handleEntityNotFound(res) {
 function saveUpdates(updates) {
   return function(entity) {
     <% if (filters.mongooseModels) { %>var updated = _.merge(entity, updates);
-    return updated.saveAsync()<% }
-       if (filters.sequelizeModels) { %>return entity.updateAttributes(updates)<% } %>
-      .spread(function(updated) {
+    return updated.saveAsync()
+      .spread(function(updated) {<% }
+       if (filters.sequelizeModels) { %>return entity.updateAttributes(updates)
+      .then(function(updated) {<% } %>
         return updated;
       });
   };

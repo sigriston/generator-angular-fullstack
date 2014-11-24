@@ -82,10 +82,10 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       },
-      beforeCreate: function(user, fn) {
+      beforeCreate: function(user, fields, fn) {
         user.updatePassword(fn);
       },
-      beforeUpdate: function(user, fn) {
+      beforeUpdate: function(user, fields, fn) {
         if (user.changed('password')) {
           user.updatePassword(fn);
         }

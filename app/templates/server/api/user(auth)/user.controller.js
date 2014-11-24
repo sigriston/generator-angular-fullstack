@@ -62,7 +62,8 @@ exports.create = function(req, res, next) {
   newUser.setDataValue('provider', 'local');
   newUser.setDataValue('role', 'user');
   newUser.save()<% } %>
-    .spread(function(user) {
+    <% if (filters.mongooseModels) { %>.spread(function(user) {<% }
+       if (filters.sequelizeModels) { %>.then(function(user) {<% } %>
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
         expiresInMinutes: 60 * 5
       });
@@ -124,7 +125,7 @@ exports.changePassword = function(req, res, next) {
         user.password = newPass;
         <% if (filters.mongooseModels) { %>return user.saveAsync()<% }
            if (filters.sequelizeModels) { %>return user.save()<% } %>
-          .spread(respondWith(res, 200))
+          .then(respondWith(res, 200))
           .catch(validationError(res));
       } else {
         return res.send(403);
