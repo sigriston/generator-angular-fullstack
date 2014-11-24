@@ -302,6 +302,10 @@ var AngularFullstackGenerator = yeoman.generators.Base.extend({
     this.config.set('registerSocketsFile', 'server/config/socketio.js');
     this.config.set('socketsNeedle', '// Insert sockets below');
 
+    this.config.set('insertModels', true);
+    this.config.set('registerModelsFile', 'server/sqldb/index.js');
+    this.config.set('modelsNeedle', '// Insert models below');
+
     this.config.set('filters', this.filters);
     this.config.forceSave();
   },

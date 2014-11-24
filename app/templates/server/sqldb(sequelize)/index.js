@@ -30,4 +30,6 @@ db.User = db.sequelize.import(path.join(
   'user.model'
 ));
 <% } %><% } %>
+// Insert models below
+
 module.exports = db;
