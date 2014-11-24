@@ -8,7 +8,7 @@ var validatePresenceOf = function(value) {
 };
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('User', {
+  var User = sequelize.define('User', {
 
     _id: {
       type: DataTypes.INTEGER,
@@ -19,7 +19,9 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: {
+        msg: 'The specified email address is already in use.'
+      },
       validate: {
         isEmail: true
       }
@@ -228,4 +230,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
+  return User;
 };
